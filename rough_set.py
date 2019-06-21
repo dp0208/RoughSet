@@ -321,14 +321,14 @@ def features_upper_approximations_of_universe(universe, attributes, labels):
     return upper_approximations
 
 
-def features_lower_approximations_of_universe_test():
+def features_upper_approximations_of_universe_test():
     """
     test upper_features_lower_approximations_of_universe
     :return: None
     """
     data = pd.read_csv("approximation_data.csv", header=None)
     result = features_upper_approximations_of_universe(np.array(data), np.arange(4), np.arange(4, 5))
-    print("approximation result:", result)
+    print("result:", result)
     print(len(result))
     return None
 
@@ -370,7 +370,7 @@ def feature_subset_positive_region_of_sample_subset_test():
     data = pd.read_csv("approximation_data.csv", header=None)
     del data[4]
     result = feature_subset_low_approximations_of_sample_subset(np.array(data), [0, 1, 4, 6, 7], [0, 3])
-    print("approximation result:", result)
+    print("result:", result)
     print(len(result))
     return None
 
@@ -397,7 +397,7 @@ def feature_subset_boundary_region_of_sample_subset_test():
     data = pd.read_csv("approximation_data.csv", header=None)
     del data[4]
     result = feature_subset_boundary_region_of_sample_subset(np.array(data), [0, 1, 4, 6, 7], [0, 3])
-    print("approximation result:", result)
+    print("result:", result)
     print(len(result))
     return None
 
@@ -422,7 +422,7 @@ def feature_subset_negative_region_of_sample_subset_test():
     data = pd.read_csv("approximation_data.csv", header=None)
     del data[4]
     result = feature_subset_negative_region_of_sample_subset(np.array(data), [0, 1, 4, 6, 7], [0, 3])
-    print("approximation result:", result)
+    print("result:", result)
     print(len(result))
     return None
 
@@ -438,19 +438,39 @@ def feature_subset_upper_approximations_of_sample_subset_test():
     print(data.shape)
     # result = feature_subset_low_approximations_of_sample_subset(np.array(data), [i for i in range(8)], np.arange(4))
     result = feature_subset_upper_approximations_of_sample_subset(np.array(data), [1, 2, 3, 4], [i for i in range(4)])
-    print("approximation result:", result)
+    print("result:", result)
     return None
 
 
-# To be determined
 def dependency(universe, features_1, features_2):
     """
     to calculate the dependency between attributes
+    :param universe: the universe of objects(feature vector/sample/instance)
     :param features_1: list, a set of objects' serial number
     :param features_2: list, a set of objects' serial number
-    :return: float number, the dependency
+    :return: float number(0-->1, 1 represent that features_1 completely depends on features_2,
+              All values of attributes from D are uniquely determined by the values of attributes from C.),
+              the dependency of features_1 to features_2, POS_features_1(features_2)
     """
-    return
+    partition_2 = partition(universe, features_2)
+    positive_region_size = 0
+    for y in partition_2:
+        positive_region_size += len(feature_subset_positive_region_of_sample_subset(universe, y, features_1))
+        # print(feature_subset_positive_region_of_sample_subset(universe, y, features_1))
+    dependency_degree = positive_region_size/len(universe)
+    return dependency_degree
+
+
+def dependency_test():
+    """
+    test dependency
+    :return: None
+    """
+    data = pd.read_csv("approximation_data.csv", header=None)
+    # result = feature_subset_low_approximations_of_sample_subset(np.array(data), [i for i in range(8)], np.arange(4))
+    result = dependency(np.array(data), [0, 3], [4])
+    print("dependency:", result)
+    return None
 
 
 # confirm the function of the above function
@@ -460,9 +480,10 @@ if __name__ == '__main__':
     # features_lower_approximations_of_universe_test()
     # feature_subset_low_approximations_of_sample_subset_test()
     # print("\nupper approximations:\n")
-    # features_lower_approximations_of_universe_test()
+    # features_upper_approximations_of_universe_test()
     # feature_subset_upper_approximations_of_sample_subset_test()
-    
-    feature_subset_positive_region_of_sample_subset_test()
-    feature_subset_boundary_region_of_sample_subset_test()
-    feature_subset_negative_region_of_sample_subset_test()
+    # feature_subset_positive_region_of_sample_subset_test()
+    # feature_subset_boundary_region_of_sample_subset_test()
+    # feature_subset_negative_region_of_sample_subset_test()
+    dependency_test()
+    pass
