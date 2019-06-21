@@ -10,17 +10,6 @@ import numpy as np
 import time
 
 
-# To be determined
-def distance(x, y):
-    """
-    calculate the distance of two objects
-    :param x: feature vector, sample, instance
-    :param y: the same as above
-    :return: None
-    """
-    return
-
-
 def is_indiscernible(x, y, attributes):
     """
     if the two feature vector is indistinguishable, return True, else return False
