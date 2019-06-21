@@ -2,9 +2,6 @@
 partition
 lower and upper approximations
 positive, boundary and negative regions
-
-:author: Wuxu Zeng from KDD
-:date: 21/6/2019
 """
 
 
@@ -242,6 +239,7 @@ def feature_subset_low_approximations_of_sample_subset(universe, sample_subset, 
     for x in partition_1:
         if set_is_include(x, [sample_subset]):
             lower_approximations.extend(x)
+    lower_approximations.sort()
     return lower_approximations
 
 
@@ -259,6 +257,7 @@ def features_lower_approximations_of_universe(universe, attributes, labels):
     for x in partition_1:
         if set_is_include(x, partition_2):
             lower_approximations.extend(x)
+    lower_approximations.sort()
     return lower_approximations
 
 
@@ -318,6 +317,7 @@ def features_upper_approximations_of_universe(universe, attributes, labels):
     :return: list, upper_approximations is composed by a set of objects' serial number
     """
     upper_approximations = list(np.arange(len(universe)))
+    upper_approximations.sort()
     return upper_approximations
 
 
@@ -346,6 +346,7 @@ def feature_subset_upper_approximations_of_sample_subset(universe, sample_subset
     for x in partition_1:
         if is_contain(x, sample_subset):
             upper_approximations.extend(x)
+    upper_approximations.sort()
     return upper_approximations
 
 
@@ -357,7 +358,8 @@ def feature_subset_positive_region_of_sample_subset(universe, sample_subset, fea
     :param feature_subset: features' index
     :return: list, positive_region is composed by a set of objects' serial number
     """
-    return feature_subset_low_approximations_of_sample_subset(universe, sample_subset, feature_subset)
+    positive_region = feature_subset_low_approximations_of_sample_subset(universe, sample_subset, feature_subset)
+    return positive_region
 
 
 def feature_subset_positive_region_of_sample_subset_test():
@@ -366,7 +368,8 @@ def feature_subset_positive_region_of_sample_subset_test():
     :return: None
     """
     data = pd.read_csv("approximation_data.csv", header=None)
-    result = features_upper_approximations_of_universe(np.array(data), np.arange(4), np.arange(4, 5))
+    del data[4]
+    result = feature_subset_low_approximations_of_sample_subset(np.array(data), [0, 1, 4, 6, 7], [0, 3])
     print("approximation result:", result)
     print(len(result))
     return None
@@ -382,7 +385,21 @@ def feature_subset_boundary_region_of_sample_subset(universe, sample_subset, fea
     """
     upper_approximations = feature_subset_upper_approximations_of_sample_subset(universe, sample_subset, feature_subset)
     lower_approximations = feature_subset_low_approximations_of_sample_subset(universe, sample_subset, feature_subset)
-    return [i for i in upper_approximations if i not in lower_approximations]
+    boundary_region = [i for i in upper_approximations if i not in lower_approximations]
+    return boundary_region
+
+
+def feature_subset_boundary_region_of_sample_subset_test():
+    """
+    test feature_subset_boundary_region_of_sample_subset
+    :return: None
+    """
+    data = pd.read_csv("approximation_data.csv", header=None)
+    del data[4]
+    result = feature_subset_boundary_region_of_sample_subset(np.array(data), [0, 1, 4, 6, 7], [0, 3])
+    print("approximation result:", result)
+    print(len(result))
+    return None
 
 
 def feature_subset_negative_region_of_sample_subset(universe, sample_subset, feature_subset):
@@ -395,6 +412,19 @@ def feature_subset_negative_region_of_sample_subset(universe, sample_subset, fea
     """
     upper_approximations = feature_subset_upper_approximations_of_sample_subset(universe, sample_subset, feature_subset)
     return [i for i in np.arange(len(universe)) if i not in upper_approximations]
+
+
+def feature_subset_negative_region_of_sample_subset_test():
+    """
+    test feature_subset_negative_region_of_sample_subset
+    :return:
+    """
+    data = pd.read_csv("approximation_data.csv", header=None)
+    del data[4]
+    result = feature_subset_negative_region_of_sample_subset(np.array(data), [0, 1, 4, 6, 7], [0, 3])
+    print("approximation result:", result)
+    print(len(result))
+    return None
 
 
 def feature_subset_upper_approximations_of_sample_subset_test():
@@ -412,6 +442,7 @@ def feature_subset_upper_approximations_of_sample_subset_test():
     return None
 
 
+# To be determined
 def dependency(universe, features_1, features_2):
     """
     to calculate the dependency between attributes
@@ -425,9 +456,13 @@ def dependency(universe, features_1, features_2):
 # confirm the function of the above function
 if __name__ == '__main__':
     # check_partition_result()
-    print("lower approximations:\n")
-    features_lower_approximations_of_universe_test()
-    feature_subset_low_approximations_of_sample_subset_test()
-    print("\nupper approximations:\n")
-    features_lower_approximations_of_universe_test()
-    feature_subset_upper_approximations_of_sample_subset_test()
+    # print("lower approximations:\n")
+    # features_lower_approximations_of_universe_test()
+    # feature_subset_low_approximations_of_sample_subset_test()
+    # print("\nupper approximations:\n")
+    # features_lower_approximations_of_universe_test()
+    # feature_subset_upper_approximations_of_sample_subset_test()
+    
+    feature_subset_positive_region_of_sample_subset_test()
+    feature_subset_boundary_region_of_sample_subset_test()
+    feature_subset_negative_region_of_sample_subset_test()
