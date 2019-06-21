@@ -473,6 +473,51 @@ def dependency_test():
     return None
 
 
+# unused
+def mean_positive_region(universe, sample_subset, feature_subset):
+    """
+    [important] Only applicable for continuous values!!!!!!
+    Not applicable to discrete values.
+
+    get the feature_subset lower approximations of sample_subset
+    :param universe: the universe of objects(feature vector/sample/instance)
+    :param sample_subset: list, a set of objects' serial number
+    :param feature_subset: features' index
+    :return: list(object), the mean of all object attributes values in positive region
+    """
+    positive_region = feature_subset_positive_region_of_sample_subset(universe, sample_subset, feature_subset)
+    total = []
+    mean = []
+    for i in range(len(feature_subset)):
+        total.append(0)
+        mean.append(0)
+    for x in positive_region:
+        for i in range(len(feature_subset)):
+            test1 = universe[x]
+            test2 = feature_subset[i]
+            test3 = test1[test2]
+            total[i] += (universe[x])[feature_subset[i]]
+    for i in range(len(feature_subset)):
+        mean[i] = total[i]/len(positive_region)
+    return mean
+
+
+def mean_positive_region_test():
+    """
+    test mean_positive_region
+    :return: None
+    """
+    data = pd.read_csv("real_value_data.csv", header=None)
+    result = mean_positive_region(np.array(data), [0, 1, 2, 3, 4], [i for i in range(5)])
+    print("result:", result)
+    return None
+
+
+def proximity_from_mean_positive_region(mean_object, y, metric = ""):
+
+    return
+
+
 # confirm the function of the above function
 if __name__ == '__main__':
     # check_partition_result()
@@ -485,5 +530,6 @@ if __name__ == '__main__':
     # feature_subset_positive_region_of_sample_subset_test()
     # feature_subset_boundary_region_of_sample_subset_test()
     # feature_subset_negative_region_of_sample_subset_test()
-    dependency_test()
+    # dependency_test()
+    mean_positive_region_test()
     pass
