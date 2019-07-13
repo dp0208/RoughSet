@@ -11,6 +11,7 @@ import time
 import math
 
 
+# for discrete data
 def is_indiscernible(x, y, attributes):
     """
     if the two feature vector is indistinguishable, return True, else return False
@@ -436,8 +437,8 @@ def dependency(universe, features_1, features_2):
     """
     to calculate the dependency between attributes
     :param universe: the universe of objects(feature vector/sample/instance)
-    :param features_1: list, a set of objects' serial number
-    :param features_2: list, a set of objects' serial number
+    :param features_1: list, a set of features' serial number
+    :param features_2: list, a set of features' serial number
     :return: float number(0-->1, 1 represent that features_1 completely depends on features_2,
               All values of attributes from D are uniquely determined by the values of attributes from C.),
               the dependency of features_1 to features_2, POS_features_1(features_2)
@@ -471,7 +472,7 @@ def mean_positive_region(universe, sample_subset, feature_subset):
 
     get the feature_subset lower approximations of sample_subset
     :param universe: the universe of objects(feature vector/sample/instance)
-    :param sample_subset: list, a set of objects' serial number
+    :param sample_subset: list, a set of features' serial number
     :param feature_subset: features' index
     :return: list(object), the mean of all object attributes values in positive region
     """
@@ -509,8 +510,8 @@ def proximity_of_objects_in_boundary_region_to_mean_positive_region_based_distan
     proximity_of_objects_in_boundary_region_from_mean_positive_region
     don't consider the condition that the positive region is empty
     :param universe: the universe of objects(feature vector/sample/instance)
-    :param features_1: list, a set of objects' serial number
-    :param features_2: list, a set of objects' serial number
+    :param features_1: list, a set of features' serial number
+    :param features_2: list, a set of features' serial number
     :return: float
     """
     partition_2 = partition(universe, features_2)
@@ -519,9 +520,9 @@ def proximity_of_objects_in_boundary_region_to_mean_positive_region_based_distan
     for subset in partition_2:
         boundary.extend(feature_subset_boundary_region_of_sample_subset(universe, subset, features_1))
         positive.extend(feature_subset_positive_region_of_sample_subset(universe, subset, features_1))
-    mean = mean_positive_region(universe, positive, features_1)
     if len(positive) == 0:
         return 0
+    mean = mean_positive_region(universe, positive, features_1)
     proximity_of_object_in_boundary_from_mean = 0
     for y in boundary:
         proximity_of_object_in_boundary_from_mean += distance(mean, universe[y]) if len(positive) > 0 else 0
@@ -598,7 +599,7 @@ def proximity_of_boundary_region_to_positive_region_based_portion(universe, samp
     to describe the information contain by the boundary of partition(universe, sample_subset)
     :param universe: the universe of objects(feature vector/sample/instance)
     :param sample_subset: list, a set of objects' serial number
-    :param feature_subset: list, a set of objects' serial number
+    :param feature_subset: list, a set of features' serial number
     :return: float, the proximity
     """
     partition_1 = partition(universe, feature_subset)
@@ -626,8 +627,8 @@ def proximity_of_boundary_region_to_positive_region_based_portion_test():
 def noisy_dependency_of_feature_subset_d_on_feature_subset_c(universe, feature_subset_c, feature_subset_d):
     """
     :param universe: the universe of objects(feature vector/sample/instance)
-    :param feature_subset_c: list, a set of objects' serial number
-    :param feature_subset_d: list, a set of objects' serial number
+    :param feature_subset_c: list, a set of features' serial number
+    :param feature_subset_d: list, a set of features' serial number
     :return: noisy dependency of feature subset a on feature subset b
     """
     partition_d = partition(universe, feature_subset_d)
@@ -653,8 +654,8 @@ def noisy_dependency_of_feature_subset_a_on_feature_subset_b_test():
 def proximity_combine_noisy_dependency(universe, feature_subset_c, feature_subset_d):
     """
     :param universe: the universe of objects(feature vector/sample/instance)
-    :param feature_subset_c: list, a set of objects' serial number
-    :param feature_subset_d: list, a set of objects' serial number
+    :param feature_subset_c: list, a set of features' serial number
+    :param feature_subset_d: list, a set of features' serial number
     :return: float, the combined measure value
     """
     proximity = proximity_of_objects_in_boundary_region_to_mean_positive_region_based_distance(
@@ -667,8 +668,8 @@ def proximity_combine_noisy_dependency(universe, feature_subset_c, feature_subse
 def noise_resistant_evaluation_measure(universe, feature_subset_c, feature_subset_d):
     """
     :param universe: the universe of objects(feature vector/sample/instance)
-    :param feature_subset_c: list, a set of objects' serial number
-    :param feature_subset_d: list, a set of objects' serial number
+    :param feature_subset_c: list, a set of features' serial number
+    :param feature_subset_d: list, a set of features' serial number
     :return: float, the noise resistant evaluation measure value
     """
     combined_value = proximity_combine_noisy_dependency(universe, feature_subset_c, feature_subset_d)
