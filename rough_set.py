@@ -505,7 +505,8 @@ def mean_positive_region_test():
 
 
 # for continuous data
-def proximity_of_objects_in_boundary_region_to_mean_positive_region_based_distance(universe, features_1, features_2):
+def proximity_of_objects_in_boundary_region_to_mean_positive_region_based_distance(
+        universe, features_1, features_2, distance):
     """
     proximity_of_objects_in_boundary_region_from_mean_positive_region
     don't consider the condition that the positive region is empty
@@ -519,14 +520,17 @@ def proximity_of_objects_in_boundary_region_to_mean_positive_region_based_distan
     positive = []
     for subset in partition_2:
         boundary.extend(feature_subset_boundary_region_of_sample_subset(universe, subset, features_1))
+        boundary = list(set(boundary))
         positive.extend(feature_subset_positive_region_of_sample_subset(universe, subset, features_1))
+    if len(boundary) == 0:
+        return 1
     if len(positive) == 0:
-        return 0
+        return 1/len(boundary)
     mean = mean_positive_region(universe, positive, features_1)
     proximity_of_object_in_boundary_from_mean = 0
     for y in boundary:
-        proximity_of_object_in_boundary_from_mean += distance(mean, universe[y]) if len(positive) > 0 else 0
-    return 1/proximity_of_object_in_boundary_from_mean if len(boundary) > 0 else 1
+        proximity_of_object_in_boundary_from_mean += distance(mean, universe[y], features_1)
+    return 1/proximity_of_object_in_boundary_from_mean
 
 
 def proximity_of_objects_in_boundary_region_to_mean_positive_region_based_distance_test():
@@ -535,22 +539,40 @@ def proximity_of_objects_in_boundary_region_to_mean_positive_region_based_distan
     :return: None
     """
     data = np.array(pd.read_csv("approximation_data.csv", header=None))
-    proximity = proximity_of_objects_in_boundary_region_to_mean_positive_region_based_distance(data, [0, 1, 2], [3, 4])
+    proximity = proximity_of_objects_in_boundary_region_to_mean_positive_region_based_distance(
+        data, [0, 1, 2], [3, 4], distance=variation_of_euclidean_distance)
     print("proximity:", proximity)
     return None
 
 
 # for continuous data
-def distance(x, y):
+def euclidean_distance(x, y, features):
     """
     calculate the distance of two objects
     :param x: feature vector, sample, instance
     :param y: feature vector, sample, instance
+    :param features: list, a set of features' serial number
     :return: float, distance
     """
     total = 0
-    for i in range(len(x)):
-        total += (x[i] - y[i])**2
+    for i in range(len(features)):
+        total += (x[i] - y[features[i]])**2
+    return math.sqrt(total)
+
+
+def variation_of_euclidean_distance(x, y, features):
+    """
+    calculate the distance of two objects
+    :param x: feature vector, sample, instance
+    :param y: feature vector, sample, instance
+    :param features: list, a set of features' serial number
+    :return: float, distance
+    """
+    total = 0
+    for i in range(len(features)):
+        if x[i] == y[features[i]]:
+            continue
+        total += 1
     return math.sqrt(total)
 
 
@@ -659,7 +681,7 @@ def proximity_combine_noisy_dependency(universe, feature_subset_c, feature_subse
     :return: float, the combined measure value
     """
     proximity = proximity_of_objects_in_boundary_region_to_mean_positive_region_based_distance(
-        universe, feature_subset_c, feature_subset_d)
+        universe, feature_subset_c, feature_subset_d, distance=variation_of_euclidean_distance)
     noisy_dependency = noisy_dependency_of_feature_subset_d_on_feature_subset_c(
         universe, feature_subset_c, feature_subset_d)
     return proximity + noisy_dependency
@@ -694,5 +716,5 @@ if __name__ == '__main__':
     # proximity_of_objects_in_boundary_region_to_mean_positive_region_based_distance_test()
     # related_information_of_subset_b_test()
     # proximity_of_boundary_region_to_positive_region_based_portion_test()
-    noisy_dependency_of_feature_subset_a_on_feature_subset_b_test()
+    # noisy_dependency_of_feature_subset_a_on_feature_subset_b_test()
     pass
