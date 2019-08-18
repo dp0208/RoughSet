@@ -40,12 +40,23 @@ def standardized_euclidean_distance(universe, x, y, features):
     total = 0
     standard_deviation = []
     for feature in features:
-        standard_deviation.append(np.std(universe[feature], ddof=1))
+        standard_deviation.append(np.std(universe[:, feature], ddof=1))
     for i in range(len(features)):
-        total += (((universe[x][features[i]] - universe[y][features[i]]) ** 2) / standard_deviation[i])
+        total += (((universe[x][features[i]] - universe[y][features[i]]) / standard_deviation[i]) ** 2)
     return math.sqrt(total)
 
 
+def standardized_euclidean_distance_test():
+    data = pd.read_csv("ExampleData.csv", header=None)
+    del data[4]
+    result = standardized_euclidean_distance(np.array(data), 0, 2, [0, 1])
+    print("x1, x3:", result)
+    result = standardized_euclidean_distance(np.array(data), 1, 2, [0, 1])
+    print("x2, x3:", result)
+    return
+
+
 if __name__ == '__main__':
-    euclidean_distance_test()
+    # euclidean_distance_test()
+    standardized_euclidean_distance_test()
     pass

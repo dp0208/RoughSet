@@ -197,7 +197,7 @@ def element_is_include(element, element_set):
 
 def set_is_include(set1, set2):
     """
-    judge if the mylist1 is included by(belong to) the mylist2
+    judge if the set1 is included by(belong to) the set2
     :param set1: a set of objects' serial number
     :param set2: list, a set of objects' serial number
     :return: True/False
@@ -215,6 +215,14 @@ def set_is_include(set1, set2):
         else:
             continue
     return False
+
+
+def set_is_include_test():
+    result = set_is_include([1, 2, 3], [[0, 1, 2, 3]])
+    print(result)
+    result = set_is_include([0, 1, 2, 3], [[1, 2, 3]])
+    print(result)
+    return
 
 
 def feature_subset_low_approximations_of_sample_subset(universe, sample_subset, feature_subset):
@@ -468,14 +476,15 @@ def dependency_test():
 
 # confirm the function of the above function
 if __name__ == '__main__':
-    print("lower approximations:\n")
-    features_lower_approximations_of_universe_test()
-    feature_subset_low_approximations_of_sample_subset_test()
-    print("\nupper approximations:\n")
-    features_upper_approximations_of_universe_test()
-    feature_subset_upper_approximations_of_sample_subset_test()
-    feature_subset_positive_region_of_sample_subset_test()
-    feature_subset_boundary_region_of_sample_subset_test()
-    feature_subset_negative_region_of_sample_subset_test()
-    dependency_test()
+    # print("lower approximations:\n")
+    # features_lower_approximations_of_universe_test()
+    # feature_subset_low_approximations_of_sample_subset_test()
+    # print("\nupper approximations:\n")
+    # features_upper_approximations_of_universe_test()
+    # feature_subset_upper_approximations_of_sample_subset_test()
+    # feature_subset_positive_region_of_sample_subset_test()
+    # feature_subset_boundary_region_of_sample_subset_test()
+    # feature_subset_negative_region_of_sample_subset_test()
+    # dependency_test()
+    set_is_include_test()
     pass
