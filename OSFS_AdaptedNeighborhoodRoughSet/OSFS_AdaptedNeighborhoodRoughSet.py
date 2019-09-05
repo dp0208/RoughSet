@@ -189,7 +189,7 @@ def generate_gap_neighborhood_test():
     data = pd.read_csv("ExampleData.csv", header=None)
     del data[4]
     result = generate_gap_neighborhood(
-        np.array(data), [0, 1], 1.5, standardized_euclidean_distance)
+        np.array(data), [0], 1.5, standardized_euclidean_distance)
     print(result)
     return
 
@@ -211,24 +211,24 @@ class OnlineFeatureSelectionAdapted3Max:
 
         # 用正域去理解
         # result: [3]
-        for gap_neighborhood in gap_neighborhoods:
-            if set_is_include(gap_neighborhood, partitions):
-                s_card += 1
-        d_s = s_card / self.universe.shape[0]
+        # for gap_neighborhood in gap_neighborhoods:
+        #     if set_is_include(gap_neighborhood, partitions):
+        #         s_card += 1
+        # d_s = s_card / self.universe.shape[0]
 
-        for gap_neighborhood in gap_neighborhoods:
-            if set_is_include(gap_neighborhood, partitions):
-                s_card += 1
-        d_s = s_card / len(attributes)
+        # for gap_neighborhood in gap_neighborhoods:
+        #     if set_is_include(gap_neighborhood, partitions):
+        #         s_card += 1
+        # d_s = s_card / len(attributes)
 
         # 样本本身不包含进邻域,s_card计算的是相似度，同样本标签一致的对象为positive sample，f1相似度正确
         # result: [0, 3]
-        for gap_neighborhood in gap_neighborhoods:
-            for single_partition in partitions:
-                if element_is_include(gap_neighborhood[0], single_partition):
-                    s_card += \
-                        (len([i for i in gap_neighborhood if i in single_partition])-1) / (len(gap_neighborhood)-1)
-        d_s = s_card / self.universe.shape[0]
+        # for gap_neighborhood in gap_neighborhoods:
+        #     for single_partition in partitions:
+        #         if element_is_include(gap_neighborhood[0], single_partition):
+        #             s_card += \
+        #                 (len([i for i in gap_neighborhood if i in single_partition])-1) / (len(gap_neighborhood)-1)
+        # d_s = s_card / self.universe.shape[0]
 
         # for gap_neighborhood in gap_neighborhoods:
         #     for single_partition in partitions:
@@ -238,13 +238,15 @@ class OnlineFeatureSelectionAdapted3Max:
         # d_s = s_card / len(attributes)
 
         # 样本本身包含进邻域,s_card计算的是相似度，同样本标签一致的对象为positive sample
+        # 根据作者源代码，确定是这种形式
+        # 邻域中同目标样本一致的标签的样本数（排除目标样本）除以邻域中样本总数（不排除目标样本）
         # result: [0, 3]
-        # for gap_neighborhood in gap_neighborhoods:
-        #     for single_partition in partitions:
-        #         if element_is_include(gap_neighborhood[0], single_partition):
-        #             s_card += \
-        #                 (len([i for i in gap_neighborhood if i in single_partition])) / (len(gap_neighborhood))
-        # d_s = s_card / self.universe.shape[0]
+        for gap_neighborhood in gap_neighborhoods:
+            for single_partition in partitions:
+                if element_is_include(gap_neighborhood[0], single_partition):
+                    s_card += \
+                        (len([i for i in gap_neighborhood if i in single_partition]) - 1) / (len(gap_neighborhood))
+        d_s = s_card / self.universe.shape[0]
 
         # for gap_neighborhood in gap_neighborhoods:
         #     for single_partition in partitions:
@@ -365,6 +367,8 @@ def dep_adapted_test():
             break
     result = algorithm.dep_adapted([0, 1])
     print([0, 1], result)
+    result = algorithm.dep_adapted([0, 3])
+    print([0, 3], result)
     result = algorithm.dep_adapted([0, 1, 3])
     print([0, 1, 3], result)
     return
@@ -379,7 +383,7 @@ def online_feature_selection_adapted3max_test():
     return
 
 
-if __name__ == '__main__':
+def main():
     # generate_delta_neighborhood_test()
     # generate_distance_triangle_matrix_test()
     # generate_k_nearest_neighborhood_test()
@@ -387,3 +391,7 @@ if __name__ == '__main__':
     dep_adapted_test()
     online_feature_selection_adapted3max_test()
     pass
+
+
+if __name__ == '__main__':
+    main()
