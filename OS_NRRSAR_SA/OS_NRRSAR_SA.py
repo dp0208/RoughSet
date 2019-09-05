@@ -571,7 +571,7 @@ def online_streaming_noise_resistant_assistant_aided_rough_set_attribute_reducti
     return
 
 
-if __name__ == '__main__':
+def main():
     quick_reduction_test()
     noise_resistant_assisted_quick_reduction_test()
 
@@ -583,3 +583,7 @@ if __name__ == '__main__':
     NoiseResistantDependencyMeasureTest.proximity_of_boundary_region_to_positive_region_based_portion_test()
     NoiseResistantDependencyMeasureTest.noisy_dependency_of_feature_subset_a_on_feature_subset_b_test()
     pass
+
+
+if __name__ == '__main__':
+    main()

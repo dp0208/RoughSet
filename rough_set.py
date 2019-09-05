@@ -64,6 +64,27 @@ def partition(universe, attributes):
     return elementary_sets
 
 
+def part_partition(universe, samples, attributes):
+    """
+    calculate the partition of part universe on attributes
+    :param universe: the universe of objects(feature vector/sample/instance)
+    :param samples: the index of part samples
+    :param attributes: features' index
+    :return: list, the partition(universe/attributes)
+    """
+    elementary_sets = []
+    for i in samples:
+        flag = True
+        for elementary_single_set in elementary_sets:
+            if is_indiscernible(universe, i, elementary_single_set[0], attributes):
+                elementary_single_set.append(i)
+                flag = False
+                break
+        if flag:
+            elementary_sets.append([i])
+    return elementary_sets
+
+
 # partition实现方式2
 # 伪代码
 # 输入：样本集，特征
@@ -474,8 +495,7 @@ def dependency_test():
     return None
 
 
-# confirm the function of the above function
-if __name__ == '__main__':
+def main():
     # print("lower approximations:\n")
     # features_lower_approximations_of_universe_test()
     # feature_subset_low_approximations_of_sample_subset_test()
@@ -488,3 +508,8 @@ if __name__ == '__main__':
     # dependency_test()
     set_is_include_test()
     pass
+
+
+# confirm the function of the above function
+if __name__ == '__main__':
+    main()

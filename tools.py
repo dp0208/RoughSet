@@ -56,7 +56,11 @@ def standardized_euclidean_distance_test():
     return
 
 
-if __name__ == '__main__':
+def main():
     # euclidean_distance_test()
     standardized_euclidean_distance_test()
     pass
+
+
+if __name__ == '__main__':
+    main()
