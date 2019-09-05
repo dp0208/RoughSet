@@ -33,14 +33,20 @@ class OnlineFeatureSelectionAdapted3Max:
         candidate_features_mi = []
         for feature in self.get_new_feature():
             feature_mi = mutual_information(feature, self.decision_features)
+            if len(candidate_features) == 0:
+                self.delta_2 = feature_mi
+            if feature_mi < self.delta_2:
+                self.delta_2 = feature_mi
             if feature_mi < self.delta_1:
                 continue
             flag = True
             for i in range(len(candidate_features)):
-                if (candidate_features_mi[i] > feature_mi) and (candidate_features_mi[i] >= self.delta_2):
+                if (candidate_features_mi[i] > feature_mi) and \
+                        (mutual_information(candidate_features[i], feature) >= self.delta_2):
                     flag = False
                     break
-                if (feature_mi > candidate_features_mi[i]) and (feature_mi >= self.delta_2):
+                if (feature_mi > candidate_features_mi[i]) and \
+                        (mutual_information(candidate_features[i], feature) >= self.delta_2):
                     candidate_features.pop(i)
                     candidate_features_mi.pop(i)
                     i -= 1
