@@ -9,7 +9,7 @@ from mutual_information import *
 
 
 class OnlineFeatureSelectionAdapted3Max:
-    def __init__(self, universe, conditional_features, decision_features, delta_1):
+    def __init__(self, universe, conditional_features, decision_features, delta_1 = 0):
         self.universe = universe
         self.conditional_features = conditional_features
         self.decision_features = decision_features
