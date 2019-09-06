@@ -2,6 +2,10 @@
 Online streaming feature selection using adapted Neighborhood Rough Set
 author: Peng Zhou, Xuegang Hu, Peipei Li, Xindong Wu
 https://doi.org/10.1016/j.ins.2018.12.074
+
+Conference
+A New Online Feature Selection Method Using Neighborhood Rough Set
+https://doi.org/10.1109/ICBK.2017.41
 """
 
 
